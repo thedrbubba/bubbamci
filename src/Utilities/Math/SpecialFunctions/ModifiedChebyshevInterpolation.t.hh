@@ -34,55 +34,54 @@ namespace utilities {
 namespace math { namespace specialfunction
 {
 
-template<typename Size=std::size_t, typename Value=double>
+template<typename Int=std::size_t, typename Float=double, Int nGridPoint=Int(5e+03)>
 class ModifiedChebyshevInterpolation {
    private:
-      using Size_t  = Size;
-      using Value_t = Value;
-         // MCI Parameters
-      static constexpr Size_t nChebyshev     = 3;
-      static constexpr Size_t Mt             = 4;     // Trunicate summation of m = 0 to infinity. Mt=4 is more than enough. (3+2*Mt) is max number derivatives needed.
-      static constexpr Value_t epsilon       = 1e-16;
-      static constexpr Size_t nGridPoint     = 5e+03;
-
-      using Array2D_t      = std::array<std::array<Value_t, nGridPoint>, (nChebyshev+1)>;
-      using functionNDer_t = std::function<Value_t(Size_t, Value_t)>;
+      using Int_t   = Int;
+      using Float_t = Float;
+      static constexpr Int_t nChebyshev = 3;
+      using Array2D_t      = std::array<std::array<Float_t, nGridPoint>, (nChebyshev+1)>;
+      using functionNDer_t = std::function<Float_t(Int_t, Float_t)>;
 
    public: // Interface
-      ModifiedChebyshevInterpolation(functionNDer_t funcNDer, bool MCIinfo=false) : FunctionNDerivate(funcNDer) { createTables(MCIinfo); }
-      Value_t operator()(Value x) { return function(x); }
+      ModifiedChebyshevInterpolation(functionNDer_t funcNDer, Float_t Epsilon, bool MCIinfo=false) 
+                : FunctionNDerivate(funcNDer), epsilon(Epsilon) {createTables(MCIinfo);}
+      Float_t operator()(Float_t x) { return function(x); }
 
    private:
-      Value_t Xmax      = 0.0;
-      Value_t inv2delta = 0.0;
-      functionNDer_t FunctionNDerivate;
+      functionNDer_t FunctionNDerivate = nullptr;
+      Float_t epsilon = 0.0;
+
+      static constexpr Int_t Mt = 4; // Trunicate summation of m = 0 to infinity. Mt=4 is more than enough. (3+2*Mt) is max number derivatives needed.
+      Float_t Xmax = 0.0;
+      Float_t inv2delta = 0.0;
       Array2D_t F;
 
    private: // member functions
-      Value_t maxFunctionNDer(void)
+      Float_t maxFunctionNDer(void)
       {
          return 4.40470'27160'06556;    // TODO: TRA - max|f(n+1)(X)| assumes n=3, f=erf
       }
-      Value_t a(Size_t k, Value_t Xi, const Value_t& delta_inv2)
+      Float_t a(Int_t k, Float_t Xi, const Float_t& delta_inv2)
       {  // Eq(37) - a_k Coefficient generation.
          BOOST_ASSERT(FunctionNDerivate);
 
-         Value_t sum = 0.0; 
-         for( Size_t m=0; m<(Mt+1); ++m ) {
+         Float_t sum = 0.0; 
+         for( Int_t m=0; m<(Mt+1); ++m ) {
             sum += std::pow(delta_inv2,2*m) * FunctionNDerivate((k+2*m), Xi) 
-                   / ( math::factorial<Value_t,Size_t>(m)*math::factorial<Value_t,Size_t>(k+m) );
+                   / ( math::factorial<Float_t,Int_t>(m)*math::factorial<Float_t,Int_t>(k+m) );
          }
          return ((k!=0) ? 2 : 1) * math::pow(delta_inv2, k)*sum;
       }
       void createTables(bool MCI_Info) 
       {  // For 3rd order Chebyshev Polynomials only.... index of 0-3.
-         const Value_t deltaNum = math::pow(2.0, nChebyshev) * math::factorial<Value_t,Size_t>(nChebyshev+1) * epsilon;
-         const Value_t delta    = std::pow(deltaNum/maxFunctionNDer(), 1.0/(nChebyshev+1));
+         const Float_t deltaNum = math::pow(2.0, nChebyshev) * math::factorial<Float_t,Int_t>(nChebyshev+1) * epsilon;
+         const Float_t delta    = std::pow(deltaNum/maxFunctionNDer(), 1.0/(nChebyshev+1));
          const auto invdelta    = 1.0/delta;
          const auto delta_inv2  = delta*0.5;
          inv2delta              = 0.5*invdelta;
 
-         for(Size_t j=0; j<nGridPoint; ++j) {
+         for(Int_t j=0; j<nGridPoint; ++j) {
            auto Xj        = (2.0*j+1.0)*delta;
            Xmax           = Xj;
            const auto A0j = a(0,Xj, delta_inv2);
@@ -106,14 +105,14 @@ class ModifiedChebyshevInterpolation {
                                 << " : *this = "              << sizeof(*this)                        
                                 << std::endl;      
       }
-      Value_t function(Value_t x)
+      Float_t function(Float_t x)
       { // Eq.(42) - f(x)
          BOOST_ASSERT(!F.empty());
          BOOST_ASSERT(0 <= x);
          BOOST_ASSERT(x < Xmax);       
 
          const auto xs=x*inv2delta;
-         const Size_t i=std::floor(xs);   // Eq.(41)    
+         const Int_t i=std::floor(xs);   // Eq.(41)    
            // This equation is specific to order 3 Chebyshev. If the order of Chebyshev Polynomials is changed this needs to changed.
          return ( F[0][i]+ xs*(F[1][i]+ xs*(F[2][i]+ xs*F[3][i] )) );
       }     

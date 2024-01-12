@@ -3,80 +3,113 @@
 #include "ModifiedChebyshevInterpolation.t.hh"
 
 
-namespace Testing {
-double functionNDer(std::size_t N, double X );
+namespace Broadening {
+ static constexpr double epsilon       = 1e-16;
+ static constexpr std::size_t nGridPoints     = 5e+03;
+ double functionNDer(std::size_t N, double X );
 }
 
 TEST_CASE("MCIClass_0", "[Simple]") 
 {
     using Catch::Matchers::WithinAbs;
     using namespace utilities::math;
-    std::function<double(std::size_t, double)> funcNDer=Testing::functionNDer;
+
+    using float_t = double;
+    using int_t   = std::size_t;
+    std::function<double(std::size_t, double)> funcNDer=Broadening::functionNDer;
     
-    specialfunction::ModifiedChebyshevInterpolation<> broadening(funcNDer);
+    specialfunction::ModifiedChebyshevInterpolation<int_t,float_t,Broadening::nGridPoints> 
+                                                 broadening(funcNDer,Broadening::epsilon);
 // TODO: TRA - Need to fix!
-    const double x = 0.1;
-    CHECK_THAT(broadening(x), WithinAbs(Testing::functionNDer(0,x), 1.0e-10));
+    const float_t x = 0.1;
+    CHECK_THAT(broadening(x), WithinAbs(Broadening::functionNDer(0,x), 1.0e-10));
 } 
 TEST_CASE("MCIClass_1", "[Simple]") 
 {
     using Catch::Matchers::WithinAbs;
     using namespace utilities::math;
-    std::function<double(std::size_t, double)> funcNDer=Testing::functionNDer;
+
+    using float_t = double;
+    using int_t   = std::size_t;
+    std::function<double(std::size_t, double)> funcNDer=Broadening::functionNDer;
     
-    specialfunction::ModifiedChebyshevInterpolation<> broadening(funcNDer);
+    specialfunction::ModifiedChebyshevInterpolation<int_t,float_t,Broadening::nGridPoints> 
+                                                 broadening(funcNDer,Broadening::epsilon);
 
 // TODO: TRA - Need to fix!
 
-    const double x = 1.0e-04;
-//    CHECK_THAT(broadening(x), WithinAbs(Testing::functionNDer(0,x), 1e-15));
+    const float_t x = 1.0e-04;
+//    CHECK_THAT(broadening(x), WithinAbs(Broadening::functionNDer(0,x), 1e-15));
 }
 TEST_CASE("MCIClass_2", "[Simple]") 
 {
     using Catch::Matchers::WithinAbs;
     using namespace utilities::math;
-    std::function<double(std::size_t, double)> funcNDer=Testing::functionNDer;
-    
-    specialfunction::ModifiedChebyshevInterpolation<> broadening(funcNDer);
 
-    const double x = 1.5;
-    CHECK_THAT(broadening(x), WithinAbs(Testing::functionNDer(0,x), 1e-15));
+    using float_t = double;
+    using int_t   = std::size_t;
+    std::function<double(std::size_t, double)> funcNDer=Broadening::functionNDer;
+    
+    specialfunction::ModifiedChebyshevInterpolation<int_t,float_t,Broadening::nGridPoints> 
+                                                 broadening(funcNDer,Broadening::epsilon);
+
+    const float_t x = 1.5;
+    CHECK_THAT(broadening(x), WithinAbs(Broadening::functionNDer(0,x), 1e-15));
 }
 TEST_CASE("MCIClass_3", "[Simple]") 
 {
     using Catch::Matchers::WithinAbs;
     using namespace utilities::math;
-    std::function<double(std::size_t, double)> funcNDer=Testing::functionNDer;
 
-    specialfunction::ModifiedChebyshevInterpolation<> broadening(funcNDer);
+    using float_t = double;
+    using int_t   = std::size_t;
+    std::function<double(std::size_t, double)> funcNDer=Broadening::functionNDer;
+    
+    specialfunction::ModifiedChebyshevInterpolation<int_t,float_t,Broadening::nGridPoints> 
+                                                 broadening(funcNDer,Broadening::epsilon);
 
-    const double x = 2.0;
-    CHECK_THAT(broadening(x), WithinAbs(Testing::functionNDer(0,x), 1e-15));
+    const float_t x = 2.0;
+    CHECK_THAT(broadening(x), WithinAbs(Broadening::functionNDer(0,x), 1e-15));
 }
 TEST_CASE("MCIClass_0to2", "[Simple]") 
 {
     using Catch::Matchers::WithinAbs;
     using namespace utilities::math;
-    std::function<double(std::size_t, double)> funcNDer=Testing::functionNDer;
 
-    specialfunction::ModifiedChebyshevInterpolation<> broadening(funcNDer);
+    using float_t = double;
+    using int_t   = std::size_t;
+    std::function<double(std::size_t, double)> funcNDer=Broadening::functionNDer;
+    
+    specialfunction::ModifiedChebyshevInterpolation<int_t,float_t,Broadening::nGridPoints> 
+                                                 broadening(funcNDer,Broadening::epsilon);
 
-    for(double x=0.5; x<2.0; x += 0.00001) {
-       CHECK_THAT(broadening(x), WithinAbs(Testing::functionNDer(0,x), 3.0e-14));
+    for(float_t x=0.5; x<2.0; x += 0.00001) {
+       CHECK_THAT(broadening(x), WithinAbs(Broadening::functionNDer(0,x), 3.0e-14));
     }
 }
 TEST_CASE("MCIClass_x_>_Xmax", "[Simple]") 
 {
     using Catch::Matchers::WithinAbs;
     using namespace utilities::math;
-    std::function<double(std::size_t, double)> funcNDer=Testing::functionNDer;
 
-    specialfunction::ModifiedChebyshevInterpolation<> broadening(funcNDer);
+    using float_t = double;
+    using int_t   = std::size_t;
+    std::function<double(std::size_t, double)> funcNDer=Broadening::functionNDer;
+    
+    specialfunction::ModifiedChebyshevInterpolation<int_t,float_t,Broadening::nGridPoints> 
+                                                 broadening(funcNDer,Broadening::epsilon);
 
+#if defined(BOOST_ENABLE_ASSERT_HANDLER)
     CHECK_THROWS(broadening(3.00)); 
+#endif
+    CHECK(true);
 }
 
-namespace Testing {
+namespace  Broadening {
+
+  // static constexpr Value_t epsilon       = 1e-16;
+  // static constexpr Size_t nGridPoints    = 5e+03;
+
   double 
   functionNDer(std::size_t N, double X ) 
   {

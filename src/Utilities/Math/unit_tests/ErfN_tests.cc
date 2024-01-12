@@ -17,7 +17,7 @@ TEST_CASE("Erfn<0>(2)", "[Simple]")
     const size_t n=0;
     const double X=2.0;
 
-    CHECK_THAT(ErfN(n,X), WithinAbs(Test::ERFN(X,n), 1e-14));
+    CHECK_THAT(Erf::ErfN(n,X), WithinAbs(Test::ERFN(X,n), 1e-14));
 }
 TEST_CASE("ErfN<1>(2)", "[Simple]") 
 {
@@ -26,7 +26,7 @@ TEST_CASE("ErfN<1>(2)", "[Simple]")
     const size_t n=1;
     const double X=2.0;
 
-    CHECK_THAT(ErfN(n,X), WithinAbs(Test::ERFN(X,n), 1e-14));
+    CHECK_THAT(Erf::ErfN(n,X), WithinAbs(Test::ERFN(X,n), 1e-14));
 }
 TEST_CASE("ErfN<2>(2)", "[Simple]") 
 {
@@ -35,7 +35,7 @@ TEST_CASE("ErfN<2>(2)", "[Simple]")
     const size_t n=2;
     const double X=2.0;
 
-    CHECK_THAT(ErfN(n,X), WithinAbs(Test::ERFN(X,n), 1e-14));
+    CHECK_THAT(Erf::ErfN(n,X), WithinAbs(Test::ERFN(X,n), 1e-14));
 }
 TEST_CASE("ErfN<3>(2)", "[Simple]") 
 {
@@ -44,7 +44,7 @@ TEST_CASE("ErfN<3>(2)", "[Simple]")
     const size_t n=3;
     const double X=2.0;
 
-    CHECK_THAT(ErfN(n,X), WithinAbs(Test::ERFN(X,n), 1e-14));
+    CHECK_THAT(Erf::ErfN(n,X), WithinAbs(Test::ERFN(X,n), 1e-14));
 }
 TEST_CASE("ErfN<10>(2)", "[Simple]") 
 {
@@ -53,7 +53,7 @@ TEST_CASE("ErfN<10>(2)", "[Simple]")
     const size_t n=10;
     const double X=2.0;
 
-    CHECK_THAT(ErfN(n,X), WithinAbs(Test::ERFN(X,n), 1e-14));
+    CHECK_THAT(Erf::ErfN(n,X), WithinAbs(Test::ERFN(X,n), 1e-14));
 }
 TEST_CASE("ErfN<11>(2)", "[Simple]") 
 {
@@ -62,7 +62,7 @@ TEST_CASE("ErfN<11>(2)", "[Simple]")
     const size_t n=11;
     const double X=2.00;
 
-    CHECK_THAT(ErfN(n,X), WithinAbs(Test::ERFN(X,n), 1e-12));
+    CHECK_THAT(Erf::ErfN(n,X), WithinAbs(Test::ERFN(X,n), 1e-12));
 }
 
 
