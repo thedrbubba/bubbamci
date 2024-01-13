@@ -4,10 +4,11 @@ endif()
 
 set(source_list 
 	Broadening_tests.cc
+    negExp_tests.cc
     Erf_tests.cc
 )
 set(library_list
-   ${target} 
+   ${target}
 )
 set(include_list
     ${CMAKE_CURRENT_LIST_DIR}
